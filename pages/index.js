@@ -1,65 +1,38 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { useState } from 'react'
+import NewsCard from '../components/NewsCard';
 
-export default function Home() {
+function index(props) {
+  console.log(props.data.news, "props.data");
+  const [page, setpage] = useState(10)
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    <div className="news-page">
+      <div className="news-page__left-column"></div>
+      <div className="news-page__middle-column">
+        <div className="news-page__middle-column__title">
+          <b>News</b>
+          <div className="news-page__middle-column__title__line" />
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+        {
+          props.data.news && props.data.news.map((news, index) => {
+            return <NewsCard data={news} index={index} />
+          })
+        }
+        <div></div>
+      </div>
+      <div className="news-page__right-column"></div>
     </div>
   )
 }
+
+let page =5
+
+export async function getServerSideProps(context) {
+  const res = await fetch(`http://80.240.21.204:1337/news?skip=12&limit=${page}`)
+  const data = await res.json()
+
+  return {
+    props: {data}, // will be passed to the page component as props
+  }
+}
+
+export default index
