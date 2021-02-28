@@ -5,10 +5,13 @@ import Spinner from '../layouts/Spinner';
 
 function index(props) {
     const router = useRouter()
+    //to handel the current page size value
     const [page, setPage] = useState(10)
     
+    //detecting if user has reach the end of the page
     const handleScroll = (e) => {
         let bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop);
+        //check if scrolling height equal to the page height then request for 10 more news
         if (bottom === e.target.clientHeight) {
             setPage(page+10)
         } else if (bottom === e.target.clientHeight+1) {
@@ -19,17 +22,22 @@ function index(props) {
     }
     
     useEffect(() => {
+        //with change of value of page push the page params with the new page size value
         router.push(`/${page}`)
+        //reset isLoading value back to true
         setIsLoading(true)
     }, [page])
 
+    //to handle spinner show/hide cases with bolean value
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
+        //decide when to show/hide the spinner
         if(props.data.news && props.data.news.length == page) {
             setIsLoading(false)
         }
     }, [props.data.news])
     
-    const [isLoading, setIsLoading] = useState(true)
 
     return (
         <div className="news-page">
@@ -54,6 +62,7 @@ function index(props) {
 }
 
 export async function getServerSideProps(context) {
+    //get page size params from the query to pass it to the API to make the request with the selected page size
   const { page } = context.query || 10
   const res = await fetch(`http://80.240.21.204:1337/news?skip=12&limit=${page}`)
   const data = await res.json()
