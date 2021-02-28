@@ -3,10 +3,9 @@ import Image from 'next/image'
 import index from '../pages'
 
 function NewsCard(props) {
-    console.log(props.index, props.data.source);
+
     return (
         <div className="news-card">
-        {props.index}
             {
                 props.data.source.title && props.data.source.url ? (
                     <div className="news-card__source">
