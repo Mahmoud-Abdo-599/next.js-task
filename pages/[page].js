@@ -47,11 +47,9 @@ function index(props) {
                     <b>News</b>
                     <div className="news-page__middle-column__title__line" />
                 </div>
-                {
-                    props.data.news && props.data.news.map((news, index) => {
+                    {props.data.news && props.data.news.map((news, index) => {
                         return <NewsCard data={news} index={index} />
-                    })
-                }
+                    })}
                 <div className={isLoading ? "news-page__middle-column__spinner" : "news-page__middle-column__spinner-stop"}>
                     <Spinner />
                 </div>
